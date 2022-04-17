@@ -47,17 +47,6 @@ def rebuild(rebuild_file, camera_mtx, camera_ex_param, dlp_mtx, dlp_ex_param,
 
         rebuild_ret = np.dot(np.linalg.inv(coefficient_mat), ret)
 
-        # visualization filter
-        if rebuild_ret[2] <= -2:
-            rebuild_ret[2] = -1
-        if rebuild_ret[2] >= 4:
-            rebuild_ret[2] = -1
-        if rebuild_ret[1] > 20:
-            rebuild_ret[2] = -1
-        if rebuild_ret[2] > 2.5:
-            rebuild_ret[2] = 2.5
-        rebuild_ret[2] += 1
-
         rebuild_rets[:, i] = rebuild_ret
 
     rebuild_ret_list.append(rebuild_rets)
@@ -91,11 +80,8 @@ def rebuild(rebuild_file, camera_mtx, camera_ex_param, dlp_mtx, dlp_ex_param,
             fig.colorbar(ax0, label='Z/μm')
 
             ax.set_xlabel('X/mm')
-            # ax.set_xlim(0, 3000)
             ax.set_ylabel('Y/mm')
-            # ax.set_zlabel('Z/mm')
-            # ax.set_zlim(0, 20)
-            # plt.legend()
+
             plt.savefig("results/2D_heatmap.png")
             plt.show()
 
