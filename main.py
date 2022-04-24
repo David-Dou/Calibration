@@ -11,6 +11,7 @@ def get_args_parser():
                         help="Use extracted corners or not")
     parser.add_argument('--corner_folder_path', default='datasets/Corners', type=str,
                         help="Corner folder path")
+
     # Camera image size
     parser.add_argument('--camera_img_width', default=4096, type=int, help="Width of camera image")
     parser.add_argument('--camera_img_height', default=3072, type=int, help="Height of camera image")

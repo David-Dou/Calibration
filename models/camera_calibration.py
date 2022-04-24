@@ -4,15 +4,17 @@ import numpy as np
 import pandas as pd
 from glob import glob
 from utils import homography as Homo
+from utils import ExtractCircleCenter
 
 
 class CameraCalibration:
     def __init__(self, width, height, du, dv, num_max_iter, tao, e1, e2,
-                 use_extracted_corners=False, corner_folder_path=None):
+                 use_extracted_corners=False, corner_folder_path=None, img_path=None):
         self.use_extracted_corners = use_extracted_corners
         if corner_folder_path is None and use_extracted_corners is True:
             raise ValueError("Corner path should be provided")
         self.corner_folder_path = corner_folder_path
+        self.img_path = img_path
 
         self.width = width
         self.height = height
@@ -39,19 +41,24 @@ class CameraCalibration:
             Circle corners reading
             '''
             corner_path_list = glob(os.path.join(self.corner_folder_path, "*.csv"))
+        else:
+            corner_extraction = ExtractCircleCenter(self.img_path, self.Nc,
+                                                    self.height, self.width)
+            corner_extraction.extract_circle_center()
+            corner_path_list = glob(os.path.join("datasets\\Extracted_Corners", "*.csv"))
 
-            for i, corner_path in enumerate(corner_path_list):
-                corner = pd.read_csv(corner_path)
-                imgps_x_one_img, imgps_y_one_img = corner.imgps_x.values, corner.imgps_y.values
-                # imgps_x_one_img, imgps_y_one_img = corner["imgps_x"], corner["imgps_y"]
-                objps_x_one_img, objps_y_one_img = corner.objps_x.values, corner.objps_y.values
+        for i, corner_path in enumerate(corner_path_list):
+            corner = pd.read_csv(corner_path)
+            imgps_x_one_img, imgps_y_one_img = corner.imgps_x.values, corner.imgps_y.values
+            # imgps_x_one_img, imgps_y_one_img = corner["imgps_x"], corner["imgps_y"]
+            objps_x_one_img, objps_y_one_img = corner.objps_x.values, corner.objps_y.values
 
-                imgpoints = np.concatenate((imgps_x_one_img, imgps_y_one_img)).reshape(2, -1)
+            imgpoints = np.concatenate((imgps_x_one_img, imgps_y_one_img)).reshape(2, -1)
 
-                objpoints = np.concatenate((objps_x_one_img, objps_y_one_img)).reshape(2, -1)
+            objpoints = np.concatenate((objps_x_one_img, objps_y_one_img)).reshape(2, -1)
 
-                self.imgpoints_list.append(imgpoints)
-                self.objpoints_list.append(objpoints)
+            self.imgpoints_list.append(imgpoints)
+            self.objpoints_list.append(objpoints)
 
     def get_in_params(self):
         self.get_corners()

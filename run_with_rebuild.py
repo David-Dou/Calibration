@@ -13,7 +13,7 @@ def parse_args():
     parser.add_argument("--use_calibrated_params", default=True, type=bool,
                         help="Use calibrated params or not")
     parser.add_argument("--calibrated_params_path", default="results", type=str)
-    parser.add_argument("--rebuild_file", default="rebuild_demo.csv", type=str)
+    parser.add_argument("--rebuild_file", default="demo/rebuild_demo.csv", type=str)
     parser.add_argument("--vis_color_interval", default=['b', 'g', 'y', 'orangered'], type=list)
     parser.add_argument("--vis_height_interval", default=[[-1, 0.1], [0.3, 1.1], [1.1, 1.8], [1.8, 3]],
                         type=list)
