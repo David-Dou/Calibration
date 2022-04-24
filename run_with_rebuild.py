@@ -22,14 +22,13 @@ def parse_args():
 
 def main():
     args = parse_args()
-    if args.use_calibrated_params:
-        with open(args.calibrated_params_path + "/camera_params.pkl", "rb") as f_camera:
-            camera_params = pickle.load(f_camera)
-        with open(args.calibrated_params_path + "/dlp_params.pkl", "rb") as f_dlp:
-            dlp_params = pickle.load(f_dlp)
-    else:
+    if not args.use_calibrated_params:
         camera_params = cal_camera(args)
         dlp_params = cal_dlp(args)
+    with open(args.calibrated_params_path + "/camera_params.pkl", "rb") as f_camera:
+        camera_params = pickle.load(f_camera)
+    with open(args.calibrated_params_path + "/dlp_params.pkl", "rb") as f_dlp:
+        dlp_params = pickle.load(f_dlp)
 
     camera_mtx = camera_params["intrinsic params"]["intrinsic matrix"]
     camera_ex_param = camera_params["extrinsic params"][0]
